@@ -1,6 +1,8 @@
 package com.langjie.langjiestreambackend.pojo.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author ZooMEISTER
@@ -9,7 +11,10 @@ import lombok.Data;
  **/
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResultVO {
+    private String resultType;
     private int resultCode;
     private String msg;
 }

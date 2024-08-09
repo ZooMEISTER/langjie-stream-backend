@@ -8,5 +8,9 @@ package com.langjie.langjiestreambackend.exception;
 
 public interface UserResultCode {
     public static final int REGISTER_SUCCESS = 11000;
-    public static final int REGISTER_FAIL_USERNAME_UNAVAILABLE =
+    public static final int LOGIN_SUCCESS = 11001;
+    public static final int REGISTER_FAIL_USERNAME_UNAVAILABLE = 12000;
+    public static final int REGISTER_FAIL_OTHER_REASON = 12001;
+    public static final int LOGIN_FAIL_USERNAME_NOT_EXIST = 12002;
+    public static final int LOGIN_FAIL_WRONG_PASSWORD = 12003;
 }

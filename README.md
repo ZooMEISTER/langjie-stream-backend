@@ -12,3 +12,8 @@ langjie-stream-backend
 | 12003  | 用户登陆失败，密码错误     |
 |        |                            |
 
+
+
+坑：
+
+1. lombok的@NoArgsConstructor会在mybatisplus的查询映射时冲突，在PO中不允许使用@NoArgsConstructor
