@@ -6,19 +6,22 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Author ZooMEISTER
  * @Description: TODO
- * @DateTime 2024/8/9 11:10
+ * @DateTime 2024/8/21 16:23
  **/
 
 @Data
 @AllArgsConstructor
-@TableName("all_user")
-public class UserPO {
+@TableName("all_message")
+public class MessagePO {
     @TableId(type = IdType.AUTO)
-    private String user_id;
-    private String user_name;
-    private String user_password;
-    private int user_permission_level;
+    private String msg_id;
+    private String msg_live_id;
+    private String msg_sender_id;
+    private String msg_type;
+    private Date msg_send_time;
 }

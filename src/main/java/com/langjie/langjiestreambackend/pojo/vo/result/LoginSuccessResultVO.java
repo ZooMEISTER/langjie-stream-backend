@@ -13,10 +13,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 public class LoginSuccessResultVO extends ResultVO {
+
+    private String user_id;
     private String token;
 
-    public LoginSuccessResultVO(String resultType, int resultCode, String msg, String token) {
+    public LoginSuccessResultVO(String resultType, int resultCode, String msg, String user_id, String token) {
         super(resultType, resultCode, msg);
+        this.user_id = user_id;
         this.token = token;
     }
 }

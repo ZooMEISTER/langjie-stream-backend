@@ -14,6 +14,15 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface UserMapper extends BaseMapper<UserPO> {
+
+    // 查看某一个 user_id 的用户数
+    @Select("SELECT COUNT(*) FROM all_user WHERE user_id=#{user_id}")
+    int getSpecificUserIdCount(String user_id);
+
+    // 根据 user_id 获取用户PO
+    @Select("SELECT * FROM all_user WHERE user_id=#{user_id}")
+    UserPO getUserPOByUserId(String user_id);
+
     // 获取某一用户名的用户数
     @Select("SELECT COUNT(*) FROM all_user WHERE user_name=#{user_name}")
     int checkIfUserNameNotAvailable(String user_name);

@@ -1,7 +1,9 @@
 package com.langjie.langjiestreambackend.config;
 
+import com.langjie.langjiestreambackend.interceptor.UserRequestInterceptor;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * @Author ZooMEISTER
@@ -11,6 +13,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootConfiguration
 public class WebConfigurer implements WebMvcConfigurer {
+
+    UserRequestInterceptor userRequestInterceptor;
+    public WebConfigurer(UserRequestInterceptor userRequestInterceptor) {
+        this.userRequestInterceptor = userRequestInterceptor;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 添加拦截器
+    * @DateTime: 2024/8/12 13:56
+    * @Params: [registry]
+    * @Return void
+    */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userRequestInterceptor);
+    }
 
     /**
     * @Author: ZooMEISTER

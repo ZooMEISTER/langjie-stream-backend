@@ -1,4 +1,4 @@
-package com.langjie.langjiestreambackend.exception;
+package com.langjie.langjiestreambackend.exception.code;
 
 /**
  * @Author ZooMEISTER
@@ -13,4 +13,7 @@ public interface UserResultCode {
     public static final int REGISTER_FAIL_OTHER_REASON = 12001;
     public static final int LOGIN_FAIL_USERNAME_NOT_EXIST = 12002;
     public static final int LOGIN_FAIL_WRONG_PASSWORD = 12003;
+    public static final int USER_GET_USER_INFO_SUCCESS = 12100;
+    public static final int USER_GET_USER_INFO_FAIL_USER_NOT_EXIST = 12101;
+    public static final int USER_GET_USER_INFO_FAIL_OTHER_REASON = 12102;
 }

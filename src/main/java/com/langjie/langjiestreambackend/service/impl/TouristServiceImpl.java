@@ -1,7 +1,7 @@
 package com.langjie.langjiestreambackend.service.impl;
 
 import com.langjie.langjiestreambackend.constant.ResultType;
-import com.langjie.langjiestreambackend.exception.UserResultCode;
+import com.langjie.langjiestreambackend.exception.code.UserResultCode;
 import com.langjie.langjiestreambackend.mapper.UserMapper;
 import com.langjie.langjiestreambackend.pojo.po.UserPO;
 import com.langjie.langjiestreambackend.pojo.vo.ResultVO;
@@ -67,6 +67,7 @@ public class TouristServiceImpl implements TouristService {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             return new ResultVO(ResultType.ERROR, UserResultCode.REGISTER_FAIL_OTHER_REASON, "注册失败: " + e.toString());
         }
     }
@@ -88,7 +89,7 @@ public class TouristServiceImpl implements TouristService {
                 if(user_password.equals(userPO.getUser_password())){
                     // 生成token
                     String newToken = JWTUtils.genAccessToken(userPO.getUser_id());
-                    return new LoginSuccessResultVO(ResultType.SUCCESS, UserResultCode.LOGIN_SUCCESS, "登陆成功", newToken);
+                    return new LoginSuccessResultVO(ResultType.SUCCESS, UserResultCode.LOGIN_SUCCESS, "登陆成功", userPO.getUser_id(), newToken);
                 }
                 else{
                     return new ResultVO(ResultType.ERROR, UserResultCode.LOGIN_FAIL_WRONG_PASSWORD, "登陆失败: 密码错误");
@@ -100,6 +101,7 @@ public class TouristServiceImpl implements TouristService {
             }
         }
         catch (Exception e){
+            e.printStackTrace();
             return new ResultVO(ResultType.ERROR, UserResultCode.REGISTER_FAIL_OTHER_REASON, "注册失败: " + e.toString());
         }
     }

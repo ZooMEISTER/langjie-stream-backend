@@ -44,10 +44,10 @@ public class LogAspect {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
             Date date = new Date(System.currentTimeMillis());
             System.out.println("---------------------------------------------");
-            System.out.println(formatter.format(date));
-            System.out.println("来自：" + request.getRemoteAddr() + " 的请求");
-            System.out.println("路径：" + request.getRequestURI());
-            System.out.println("执行：" + method.getName() + "() 方法");
+            System.out.print(formatter.format(date));
+            System.out.println(" 来自：" + request.getRemoteAddr() + " 的请求");
+            System.out.print("路径：" + request.getRequestURI());
+            System.out.println(" 执行：" + method.getName() + "() 方法");
             System.out.println("描述：" + description);
         }
 
