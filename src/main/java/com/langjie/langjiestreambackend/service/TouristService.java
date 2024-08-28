@@ -12,6 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TouristService {
     String TouristServiceTest();
-    ResultVO TouristRegister(String user_name, String user_password);
+    ResultVO TouristRegister(String user_name, String user_password, String user_real_name, String user_organization);
     ResultVO TouristLogin(String user_name, String user_password);
 }

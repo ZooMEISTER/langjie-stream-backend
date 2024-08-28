@@ -6,22 +6,18 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * @Author ZooMEISTER
  * @Description: TODO
- * @DateTime 2024/8/21 16:23
+ * @DateTime 2024/8/23 16:26
  **/
 
 @Data
 @AllArgsConstructor
-@TableName("all_message")
-public class MessagePO {
+@TableName("live_type")
+public class LiveTypePO {
     @TableId(type = IdType.ASSIGN_UUID)
-    private String msg_id;
-    private String msg_live_id;
-    private String msg_sender_id;
-    private String msg_type;
-    private Date msg_send_time;
+    private String live_type_id;
+    private String live_type_code;
+    private String live_type_name;
 }

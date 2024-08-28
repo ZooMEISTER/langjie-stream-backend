@@ -79,7 +79,7 @@ public class WebSocketImpl implements WebSocket {
                         JSON.toJSONString(
                                 new WebSocketMessageBO(
                                         UUID.randomUUID().toString().replace("-", ""),
-                                        "SERVER_ERROR",
+                                        "SERVER",
                                         "服务器",
                                         WebSocketMessageType.SERVER_ERROR,
                                         "哥们你被顶号了，CHAT已断开",
@@ -92,9 +92,12 @@ public class WebSocketImpl implements WebSocket {
                 sessionPool.remove(live_id + ":" + user_id);
             }
 
+            // 新消息的id
+            String msgId = UUID.randomUUID().toString().replace("-", "");
+
             // 用户进来时，发送一条直播间消息
             UserPO userPO = userMapper.getUserPOByUserId(user_id);
-            sendMsgToSingleLiveRoom(live_id, "SERVER_INFO", "服务器", WebSocketMessageType.SERVER_INFO, userPO.getUser_name() + " 已加入直播间");
+            sendMsgToSingleLiveRoom(live_id, "SERVER", "服务器", WebSocketMessageType.SERVER_INFO_USER_IN_OUT, msgId, userPO.getUser_name() + " 已加入直播间");
 
             // 把新进来的连接添加进去
             sessions.add(session);
@@ -115,7 +118,7 @@ public class WebSocketImpl implements WebSocket {
                                         (String) hisMsgJSON.get("msgId"),
                                         (String) hisMsgJSON.get("senderId"),
                                         (String) hisMsgJSON.get("senderName"),
-                                        WebSocketMessageType.USER_MESSAGE_HISTORY,
+                                        (String) hisMsgJSON.get("msgType") + "_HISTORY",
                                         (String) hisMsgJSON.get("msg"),
                                         (String) hisMsgJSON.get("sendTime")
                                 )
@@ -128,9 +131,9 @@ public class WebSocketImpl implements WebSocket {
                     JSON.toJSONString(
                             new WebSocketMessageBO(
                                     UUID.randomUUID().toString().replace("-", ""),
-                                    "SERVER_INFO",
+                                    "SERVER",
                                     "服务器",
-                                    WebSocketMessageType.SERVER_INFO,
+                                    WebSocketMessageType.SERVER_INFO_CONNECT_DISCONNECT,
                                     "以上为历史消息, CHAT已连接",
                                     TimeUtils.getCurrentTimeMsString()
                             )
@@ -179,9 +182,12 @@ public class WebSocketImpl implements WebSocket {
                 // 从SESSION_POOL中移除该连接
                 sessionPool.remove(currentSessionKey);
 
+                // 新消息的id
+                String msgId = UUID.randomUUID().toString().replace("-", "");
+
                 // 在直播间内广播一条退出消息
                 UserPO userPO = userMapper.getUserPOByUserId(currentSessionKey.split(":")[1]);
-                sendMsgToSingleLiveRoom(currentSessionKey.split(":")[0], "SERVER_INFO", "服务器", WebSocketMessageType.SERVER_INFO, userPO.getUser_name() + " 已退出直播间");
+                sendMsgToSingleLiveRoom(currentSessionKey.split(":")[0], "SERVER", "服务器", WebSocketMessageType.SERVER_INFO_USER_IN_OUT, msgId, userPO.getUser_name() + " 已退出直播间");
             }
 
             log.info("当前连接数: {}", sessions.size());
@@ -218,13 +224,11 @@ public class WebSocketImpl implements WebSocket {
             // 该信息的 [0]直播间id 和 [1]发送者id
             String[] msgInfo = currentSessionKey.split(":");
 
+            // 新消息的id
+            String msgId = UUID.randomUUID().toString().replace("-", "");
+
             // 找到的连接对应的信息
-            if(message.startsWith("[ROOM_MSG]")){
-                // 发送的是直播间消息
-                String actualMsg = message.substring(10);
-                sendMsgToSingleLiveRoom(msgInfo[0], msgInfo[1], msgInfo[1], WebSocketMessageType.USER_MESSAGE, actualMsg);
-            }
-            else if(message.startsWith("[BROADCAST_MSG]")){
+            if(message.startsWith("[BROADCAST_MSG]")){
                 // 发送的是广播消息
                 String actualMsg = message.substring(15);
                 broadCastMsgToALL(msgInfo[1], msgInfo[1], WebSocketMessageType.USER_MESSAGE, "[BROADCAST] " + actualMsg);
@@ -232,10 +236,29 @@ public class WebSocketImpl implements WebSocket {
             else{
                 // 默认发送的是直播间消息
                 String actualMsg = message;
-                sendMsgToSingleLiveRoom(msgInfo[0], msgInfo[1], msgInfo[1], WebSocketMessageType.USER_MESSAGE, actualMsg);
+                sendMsgToSingleLiveRoom(msgInfo[0], msgInfo[1], msgInfo[1], WebSocketMessageType.USER_MESSAGE, msgId, actualMsg);
             }
 
             log.info(currentSessionKey + ": " + message);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 给某个连接发送消息
+    * @DateTime: 2024/8/23 9:58
+    * @Params: [session, msg]
+    * @Return void
+    */
+    @Override
+    public void sendMsgToSingleViewer(WebSocketSession session, String msg) {
+        try{
+            if(session.isOpen()){
+                session.sendMessage(new TextMessage(msg));
+            }
         }
         catch (Exception e){
             e.printStackTrace();
@@ -250,7 +273,7 @@ public class WebSocketImpl implements WebSocket {
     * @Return void
     */
     @Override
-    public void sendMsgToSingleViewer(String live_id, String user_id, String senderName, String targetViewerId, String msgType, String msg){
+    public void sendMsgToSingleViewer(String live_id, String user_id, String senderName, String targetViewerId,  String msgType, String msg){
         try{
             // 查询发送者的信息
             UserPO userPO = userMapper.getUserPOByUserId(user_id);
@@ -298,7 +321,7 @@ public class WebSocketImpl implements WebSocket {
     * @Return void
     */
     @Override
-    public void sendMsgToSingleLiveRoom(String live_id, String user_id, String senderName, String msgType, String msg){
+    public void sendMsgToSingleLiveRoom(String live_id, String user_id, String senderName, String msgType, String msgId, String msg){
         try{
             // 查询发送者的信息
             UserPO userPO = userMapper.getUserPOByUserId(user_id);
@@ -311,7 +334,7 @@ public class WebSocketImpl implements WebSocket {
             // 获取实际发送的字符串
             String msgString = JSON.toJSONString(
                     new WebSocketMessageBO(
-                            UUID.randomUUID().toString().replace("-", ""),
+                            msgId,
                             user_id,
                             senderName,
                             msgType,
@@ -320,16 +343,28 @@ public class WebSocketImpl implements WebSocket {
                     )
             );
 
-            if(msgType.equals(WebSocketMessageType.USER_MESSAGE)){
-                // 如果是用户发送的普通聊天消息，则把该消息放暂存到 Redis 中
+            // 对数据库操作
+            if(msgType.equals(WebSocketMessageType.USER_MESSAGE) || msgType.equals((WebSocketMessageType.USER_WIN_PRIZE))){
+                // 如果是用户发送的普通聊天消息或用户的中奖信息，则把该消息放暂存到 Redis 中
                 // 存放的是一个 zset 信息的发送时间作为 score
                 redisTemplate.opsForZSet().add(
                         environment.getProperty("stream.server.redis.live-room-chat-history") + live_id,
                         msgString,
                         Double.parseDouble(msgTime)
                 );
-            }
 
+                // 把该消息塞到MySQL中
+                if(msgType.equals(WebSocketMessageType.USER_MESSAGE)){
+                    int res = liveMapper.insertNewUserMsg(msgId, live_id, user_id, msgType, msgString, new Date(Long.parseLong(msgTime)));
+                }
+                else if(msgType.equals((WebSocketMessageType.USER_WIN_PRIZE))){
+                    int res = liveMapper.insertNewServerMsg(msgId, msgType, msgString, new Date(Long.parseLong(msgTime)));
+                }
+            }
+            else if(msgType.startsWith("SERVER_")){
+                // 把该消息塞到MySQL中
+                int res = liveMapper.insertNewServerMsg(msgId, msgType, msgString, new Date(Long.parseLong(msgTime)));
+            }
 
             // 遍历连接 Map 把消息发送出去
             for(String key : sessionPool.keySet()){

@@ -18,6 +18,9 @@ public class LiveVO_SUB {
     private String live_description;
     private String live_creator;
     private String live_creator_name;
+    private String live_type;
     private Boolean hasPassword;
+    private String live_start_time;
+    private String live_end_time;
     private String live_create_time;
 }

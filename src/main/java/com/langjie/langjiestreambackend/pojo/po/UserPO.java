@@ -16,9 +16,11 @@ import lombok.Data;
 @AllArgsConstructor
 @TableName("all_user")
 public class UserPO {
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String user_id;
     private String user_name;
     private String user_password;
+    private String user_real_name;
+    private String user_organization;
     private int user_permission_level;
 }

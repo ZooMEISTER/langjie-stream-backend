@@ -16,7 +16,11 @@ public class LiveVO_FULL {
     private String live_name;
     private String live_description;
     private String live_creator;
+    private String live_type;
+    private String live_password;
     private String live_push_path;
     private String live_pull_path;
+    private String live_start_time;
+    private String live_end_time;
     private String live_create_time;
 }

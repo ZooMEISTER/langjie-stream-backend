@@ -2,6 +2,7 @@ package com.langjie.langjiestreambackend.service;
 
 import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -14,6 +15,7 @@ import java.util.Set;
  * @DateTime 2024/8/21 9:29
  **/
 
+@Component
 public interface WebSocket {
     /**
      * 会话开始回调
@@ -46,6 +48,13 @@ public interface WebSocket {
     void handleError(WebSocketSession session, Throwable error);
 
     /**
+     * @Author: ZooMEISTER
+     * @Description: 给某个直播间的某一个观众发送消息
+     * @DateTime: 2024/8/21 13:42
+     */
+    void sendMsgToSingleViewer(WebSocketSession session, String msg);
+
+    /**
     * @Author: ZooMEISTER
     * @Description: 给某个直播间的某一个观众发送消息
     * @DateTime: 2024/8/21 13:42
@@ -57,7 +66,7 @@ public interface WebSocket {
     * @Description: 给某一个直播间发送消息
     * @DateTime: 2024/8/21 11:06
     */
-    void sendMsgToSingleLiveRoom(String live_id, String user_id, String senderName, String msgType, String msg);
+    void sendMsgToSingleLiveRoom(String live_id, String user_id, String senderName, String msgType, String msgId, String msg);
 
     /**
     * @Author: ZooMEISTER

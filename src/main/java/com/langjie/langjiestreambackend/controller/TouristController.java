@@ -40,8 +40,10 @@ public class TouristController {
     @PostMapping("/register")
     @LogAnnotation(description = "游客注册接口")
     public ResultVO TouristRegister(@RequestParam("user_name") String user_name,
-                                    @RequestParam("user_password") String user_password){
-        return touristService.TouristRegister(user_name, user_password);
+                                    @RequestParam("user_password") String user_password,
+                                    @RequestParam("user_real_name") String user_real_name,
+                                    @RequestParam("user_organization") String user_organization){
+        return touristService.TouristRegister(user_name, user_password, user_real_name, user_organization);
     }
 
     /**

@@ -45,7 +45,7 @@ public class TouristServiceImpl implements TouristService {
     */
     @Override
     @Transactional
-    public ResultVO TouristRegister(String user_name, String user_password) {
+    public ResultVO TouristRegister(String user_name, String user_password, String user_real_name, String user_organization) {
         try{
             synchronized (this){
                 int isUsernameNotAvailable = userMapper.checkIfUserNameNotAvailable(user_name);
@@ -56,7 +56,7 @@ public class TouristServiceImpl implements TouristService {
                 else{
                     // 该用户名可用
                     String user_id = UUID.randomUUID().toString().replace("-", "");
-                    int res = userMapper.insertNewUser(user_id, user_name, user_password);
+                    int res = userMapper.insertNewUser(user_id, user_name, user_password, user_real_name, user_organization);
                     if(res > 0){
                         return new ResultVO(ResultType.SUCCESS, UserResultCode.REGISTER_SUCCESS, "注册成功");
                     }
